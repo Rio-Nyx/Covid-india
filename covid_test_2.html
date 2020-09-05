@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My page</title>
+
+<script type="text/javascript">
+	
+    var apiUrl = 'https://api.covid19india.org/state_district_wise.json';
+ 	request = new XMLHttpRequest();
+	request.open('GET', apiUrl, true);
+	request.onload = function() {
+	  	if (request.status >= 200 && request.status < 400){
+		data = JSON.parse(request.responseText);
+		allFunctions(); // executes all functions --> diversion
+		}
+		else{
+	   	document.write("connected to server \n but cannot access data");
+		}
+ 	 };
+	request.onerror=function(){
+	document.write("cannot reach server");
+    };
+  
+   //all functions to execute using file comes here 
+   function allFunctions(){
+   		states();
+   }
+
+   // function to create options from file
+   function states(){
+	   for(var i in data){
+		  var x = document.createElement("option");
+		  x.setAttribute("value",i);
+		  x.appendChild( document.createTextNode(i) );
+		  document.getElementById("Selection1").appendChild(x);
+		}
+   }
+   
+   // function to create options from file
+   function districts(){
+   			document.getElementById("Selection2").innerHTML = "";
+   		  i = Selection1.options[Selection1.selectedIndex].value;
+   		  // alert("hello"+ i);
+	   	  for(var j in data[i].districtData){
+			  var y = document.createElement("option");
+			  y.setAttribute("value",j);
+			  y.appendChild( document.createTextNode(j) );
+			  document.getElementById("Selection2").appendChild(y);
+		 }
+   }
+ 	
+ 	// function to alert the index of selected option
+ 	// to show active cases 
+  	function show(){
+  		j=Selection2.options[Selection2.selectedIndex].value ;
+  		document.getElementById("active").innerHTML="	Active cases  :  " + data[i].districtData[j].active +"\n"   ;
+  		document.getElementById("confirmed").innerHTML="	Total confirmed  :  " + data[i].districtData[j].confirmed +"\n" ;
+  		document.getElementById("recovered").innerHTML="	Total recovered  :  " + data[i].districtData[j].recovered +"\n" ;
+  		document.getElementById("death").innerHTML="	Deaths  :  " + data[i].districtData[j].deceased +"\n" ;
+  	}  	
+   request.send();
+ 	
+</script>
+</head>
+
+<body>				
+	
+	<select id=Selection1 onchange="districts();"  ></select>
+	<select id=Selection2 ></select>
+	<input type=submit onclick=show() value=submit />
+	<br> 	
+	<pre><a href=covid_test_1.html>click here</a></pre> to know the data statewise	
+	<br><br>
+	<ul>
+	<div id=confirmed ></div>
+	<div id=active ></div>
+	<div id=recovered ></div>
+	<div id=death></div>
+	</ul>
+</body>
+<style>
+body{
+	background:url('https://media.tenor.com/images/156dc1ecf38059a0d1a4ece55bb913f1/tenor.gif')  no-repeat  center  fixed;
+	background-size: contain ;
+	font-family:sans-serif;
+}
+</style>
+</html>

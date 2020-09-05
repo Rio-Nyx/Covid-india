@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>My page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" >
+<script type="text/javascript">
+	
+    var apiUrl = 'https://api.covid19india.org/data.json';
+ 	request = new XMLHttpRequest();
+	request.open('GET', apiUrl, true);
+	request.onload = function() {
+  	if (request.status >= 200 && request.status < 400){
+    data = JSON.parse(request.responseText);
+    	myFunction();
+   }
+	else{
+   	document.write("connected to server \n but cannot access data");
+   }
+  };
+	request.onerror=function(){
+	document.write("cannot reach server");
+   };
+   
+   // function to save input in a variable
+   function saveUn(){
+   	var statename =document.getElementById('un').value ;
+   	document.getElementById('test').innerHTML=statename ;	
+   	return false;
+   }
+   
+   // function to create options from file
+   function myFunction(){
+	   for(var i=0;i<=37;i++){
+		  var x = document.createElement("option");
+		  x.setAttribute("value",i);
+		  x.appendChild(document.createTextNode(data.statewise[i].state));
+		  document.getElementById("mySelect").appendChild(x);
+		  }
+  }
+ 	
+ 	// function to alert the index of selected option
+ 	// to show active cases 
+  	function show(){
+  		i=document.getElementById('mySelect').options.selectedIndex
+  		// alert(i) ;
+  		document.getElementById("active").innerHTML="Active cases  :  " + data.statewise[i].active +"\n"   ;
+  		document.getElementById("death").innerHTML="Deaths  :  " + data.statewise[i].deaths+"\n" ;
+  		document.getElementById("confirmed").innerHTML="Total confirmed  :  " + data.statewise[i].confirmed+"\n" ;
+  		document.getElementById("recovered").innerHTML="Total recovered  :  " + data.statewise[i].recovered+"\n" ;
+  	}
+  	
+   request.send();
+ 	
+</script>
+</head>
+
+<body>
+	<div id=img >
+		<select id=mySelect></select>
+		<input type=submit onclick=show() value=submit /> 
+		<br>	
+		<pre><a href=covid_test_2.html>click here</a></pre> to know the data districtwise
+		<br><br>
+		<div id=test></div>
+		<ul>
+		<div id=confirmed ></div >
+		<div id=active ></div >
+		<div id=recovered ></div >
+		<div id=death></div>
+		</ul>
+	</div>
+	
+</body>
+<style>
+html{
+	background:url('https://media.tenor.com/images/156dc1ecf38059a0d1a4ece55bb913f1/tenor.gif')  no-repeat center center fixed;
+	background-size: cover;
+	font-family:sans-serif;
+}
+
+</style>
+</html>
